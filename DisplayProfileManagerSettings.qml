@@ -14,6 +14,13 @@ PluginSettings {
         color: Theme.surfaceText
     }
 
+    ToggleSetting {
+        settingKey: "pollingEnabled"
+        label: "Automatic polling"
+        description: "Automatically refresh profile state in the background. In other words, it disables the 'refresh interval' slider."
+        defaultValue: true
+    }
+
     StyledRect {
         width: parent.width
         height: generalCol.implicitHeight + Theme.spacingL * 2

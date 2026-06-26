@@ -8,6 +8,7 @@ PluginComponent {
     id: root
 
     readonly property int pollIntervalSeconds: Math.max(1, (pluginData && pluginData.pollIntervalSeconds) || 15)
+    readonly property bool pollingEnabled: !pluginData || pluginData.pollingEnabled !== false
     readonly property var profiles: DisplayProfileService.profiles || []
     readonly property string activeProfileName: DisplayProfileService.activeProfileName
     readonly property var activeProfile: {
@@ -55,7 +56,7 @@ PluginComponent {
 
     Timer {
         interval: root.pollIntervalSeconds * 1000
-        running: true
+        running: root.pollingEnabled
         repeat: true
         triggeredOnStart: true
         onTriggered: DisplayProfileService.refresh()
