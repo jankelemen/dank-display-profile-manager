@@ -1,12 +1,9 @@
 import QtQuick
-import Quickshell
 import qs.Common
 import qs.Modules.Plugins
 import qs.Widgets
 
 PluginSettings {
-    id: settings
-
     pluginId: "displayProfileManager"
     Component.onCompleted: DisplayProfileService.refresh()
 
