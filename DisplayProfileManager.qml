@@ -331,7 +331,7 @@ PluginComponent {
 
             Item {
                 width: 1
-                height: Theme.spacingM
+                height: Theme.spacingXS
             }
 
         }
