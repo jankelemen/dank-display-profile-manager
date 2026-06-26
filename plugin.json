@@ -1,0 +1,17 @@
+{
+    "$schema": "https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/master/quickshell/PLUGINS/plugin-schema.json",
+    "id": "displayProfileManager",
+    "name": "Display Profile Manager",
+    "description": "DankBar widget for selecting DMS output profiles and showing the currently active display profile.",
+    "version": "0.1.0",
+    "license": "MIT",
+    "author": "Jan Kelemen",
+    "icon": "desktop_windows",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./DisplayProfileManager.qml",
+    "settings": "./DisplayProfileManagerSettings.qml",
+    "requires_dms": ">=1.4.0",
+    "requires": ["dms"],
+    "permissions": ["process", "settings_read", "settings_write"]
+}
