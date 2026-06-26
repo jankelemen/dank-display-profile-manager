@@ -9,5 +9,5 @@
     "dependencies": ["dms"],
     "compositors": ["any"],
     "distro": ["any"],
-    "screenshot": "https://github.com/jankelemen/dank-display-profile-manager/assets/screenshot.png"
+    "screenshot": "https://raw.githubusercontent.com/jankelemen/dank-display-profile-manager/master/assets/screenshot.png"
 }
