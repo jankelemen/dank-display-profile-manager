@@ -47,7 +47,6 @@ PluginComponent {
     }
 
     layerNamespacePlugin: "displayProfileManager"
-    Component.onCompleted: DisplayProfileService.refresh()
     pillRightClickAction: function() {
         root.cycleProfile();
     }
@@ -55,10 +54,33 @@ PluginComponent {
     popoutHeight: Math.max(236, Math.min(476, 172 + root.profiles.length * 64))
 
     Timer {
+        id: startupRefresh
+
+        property int remainingAttempts: 6
+
+        interval: 1000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: {
+            if (DisplayProfileService.activeProfileName.length > 0 || startupRefresh.remainingAttempts <= 0) {
+                startupRefresh.stop();
+                return ;
+            }
+
+            if (DisplayProfileService.refreshing)
+                return ;
+
+            startupRefresh.remainingAttempts -= 1;
+            DisplayProfileService.refresh();
+        }
+    }
+
+    Timer {
         interval: root.pollIntervalSeconds * 1000
         running: root.pollingEnabled
         repeat: true
-        triggeredOnStart: true
+        triggeredOnStart: false
         onTriggered: DisplayProfileService.refresh()
     }
 
