@@ -98,12 +98,19 @@ Singleton {
             if (line.length === 0)
                 continue;
 
-            const match = line.match(/^(.+?)(?:\s+\[active\])?\s*->\s*(.+)$/);
+            const match = line.match(/^(.+?)\s*->\s*(.+)$/);
             if (!match)
                 continue;
 
-            const name = match[1].trim();
-            const active = /\s+\[active\]\s*->/.test(line);
+            const profileMatch = match[1].trim().match(/^(.+?)(?:\s+\[([^\]]+)\])?$/);
+            if (!profileMatch)
+                continue;
+
+            const name = profileMatch[1].trim();
+            const tags = profileMatch[2] ? profileMatch[2].split(",").map((tag) => {
+                return tag.trim();
+            }) : [];
+            const active = tags.indexOf("active") !== -1;
             const outputs = root._parseOutputs(match[2].trim());
             parsedProfiles.push({
                 "name": name,
