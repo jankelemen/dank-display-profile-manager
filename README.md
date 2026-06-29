@@ -40,7 +40,7 @@ Then open DMS settings, scan for plugins, enable **Display Profile Manager**, an
 Settings live in **DMS Settings -> Plugins -> Display Profile Manager**.
 
 - **Refresh interval**: how often the plugin calls `dms ipc outputs listProfiles`; default is 15 seconds.
-- **Polling**: enables or disables automatic background refreshes. Manual refresh and profile switching still refresh state.
+- **Periodic polling**: enables or disables background refreshes. Manual refresh and profile switching still refresh state.
 
 Profiles themselves are managed by DMS outputs. This plugin only displays and selects them.
 

@@ -16,8 +16,8 @@ PluginSettings {
 
     ToggleSetting {
         settingKey: "pollingEnabled"
-        label: "Automatic polling"
-        description: "Automatically refresh profile state in the background. In other words, it disables the 'refresh interval' slider."
+        label: "Periodic polling"
+        description: "Periodically refresh profile state in the background. Turning this off stops refresh interval updates."
         defaultValue: true
     }
 
