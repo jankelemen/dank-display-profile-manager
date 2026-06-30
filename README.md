@@ -26,6 +26,14 @@ dms ipc outputs setProfile <profile>
 
 ## Install
 
+### Automatic
+
+```sh
+dms plugins install displayProfileManager
+```
+
+### Manual
+
 Symlink the plugin into DMS:
 
 ```sh
