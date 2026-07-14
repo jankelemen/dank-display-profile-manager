@@ -10,6 +10,7 @@ PluginComponent {
     readonly property int pollIntervalSeconds: Math.max(1, (pluginData && pluginData.pollIntervalSeconds) || 15)
     readonly property bool pollingEnabled: !pluginData || pluginData.pollingEnabled !== false
     readonly property var profiles: DisplayProfileService.profiles || []
+    readonly property bool autoEnabled: DisplayProfileService.autoEnabled
     readonly property string activeProfileName: DisplayProfileService.activeProfileName
     readonly property var activeProfile: {
         const profile = root.profiles.find((p) => {
@@ -43,7 +44,17 @@ PluginComponent {
     }
 
     function displayName() {
+        if (root.autoEnabled)
+            return "Auto";
+
         return root.activeProfileName.length > 0 ? root.activeProfileName : "No profile";
+    }
+
+    function detailText() {
+        if (root.autoEnabled)
+            return "Auto profile selection is on";
+
+        return root.activeProfile ? DisplayProfileService.outputsLabel(root.activeProfile) : (DisplayProfileService.lastError.length > 0 ? DisplayProfileService.lastError : "Waiting for profiles");
     }
 
     layerNamespacePlugin: "displayProfileManager"
@@ -63,7 +74,7 @@ PluginComponent {
         repeat: true
         triggeredOnStart: true
         onTriggered: {
-            if (DisplayProfileService.activeProfileName.length > 0 || startupRefresh.remainingAttempts <= 0) {
+            if (DisplayProfileService.autoEnabled || DisplayProfileService.activeProfileName.length > 0 || startupRefresh.remainingAttempts <= 0) {
                 startupRefresh.stop();
                 return ;
             }
@@ -149,6 +160,7 @@ PluginComponent {
 
             showCloseButton: false
             spacing: Theme.spacingM
+            Component.onCompleted: DisplayProfileService.refresh()
 
             Row {
                 width: parent.width - Theme.spacingL * 2
@@ -179,7 +191,7 @@ PluginComponent {
                     }
 
                     StyledText {
-                        text: root.activeProfile ? DisplayProfileService.outputsLabel(root.activeProfile) : (DisplayProfileService.lastError.length > 0 ? DisplayProfileService.lastError : "Waiting for profiles")
+                        text: root.detailText()
                         font.pixelSize: Theme.fontSizeSmall
                         color: DisplayProfileService.lastError.length > 0 ? Theme.error : Theme.surfaceTextMedium
                         elide: Text.ElideRight
@@ -227,8 +239,60 @@ PluginComponent {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: Theme.spacingS
 
+                StyledRect {
+                    width: parent.width
+                    height: 72
+                    radius: Theme.cornerRadius
+                    color: Theme.surfaceContainerHigh
+                    visible: root.autoEnabled
+
+                    Row {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: Theme.spacingM
+                        anchors.rightMargin: Theme.spacingM
+                        spacing: Theme.spacingM
+
+                        DankIcon {
+                            name: "auto_mode"
+                            color: Theme.primary
+                            size: Theme.iconSize
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Column {
+                            width: parent.width - Theme.iconSize - Theme.spacingM
+                            spacing: Theme.spacingXS
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            StyledText {
+                                text: "Auto profile selection is on"
+                                font.pixelSize: Theme.fontSizeMedium
+                                font.weight: Font.Bold
+                                color: Theme.surfaceText
+                                width: parent.width
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                            }
+
+                            StyledText {
+                                text: "Profiles can't be selected"
+                                font.pixelSize: Theme.fontSizeSmall
+                                color: Theme.surfaceTextMedium
+                                width: parent.width
+                                elide: Text.ElideRight
+                                maximumLineCount: 1
+                            }
+
+                        }
+
+                    }
+
+                }
+
                 Repeater {
-                    model: root.profiles
+                    model: root.autoEnabled ? [] : root.profiles
 
                     delegate: StyledRect {
                         id: profileRow
@@ -299,7 +363,7 @@ PluginComponent {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            enabled: !DisplayProfileService.applying
+                            enabled: !DisplayProfileService.refreshing && !DisplayProfileService.applying
                             onClicked: root.setProfile(profileRow.modelData)
                         }
 
@@ -312,7 +376,7 @@ PluginComponent {
                     height: 56
                     radius: Theme.cornerRadius
                     color: Theme.surfaceContainerHigh
-                    visible: root.profiles.length === 0
+                    visible: !root.autoEnabled && root.profiles.length === 0
 
                     StyledText {
                         anchors.centerIn: parent

@@ -9,6 +9,7 @@ Singleton {
 
     property var profiles: []
     property string activeProfileName: ""
+    property bool autoEnabled: false
     property string lastError: ""
     property string lastRefreshText: ""
     property bool refreshing: false
@@ -16,6 +17,27 @@ Singleton {
 
     function refresh() {
         root.refreshing = true;
+        Proc.runCommand("displayProfileService.status", ["dms", "ipc", "outputs", "status"], (stdout, exitCode) => {
+            if (exitCode !== 0) {
+                root.autoEnabled = false;
+                root._refreshProfiles();
+                return ;
+            }
+            const status = root._parseStatus(stdout);
+            root.autoEnabled = status.autoEnabled;
+            if (root.autoEnabled) {
+                root.refreshing = false;
+                root.profiles = [];
+                root.activeProfileName = "";
+                root.lastError = "";
+                root.lastRefreshText = Qt.formatDateTime(new Date(), "HH:mm:ss");
+                return ;
+            }
+            root._refreshProfiles();
+        }, 50, 5000);
+    }
+
+    function _refreshProfiles() {
         Proc.runCommand("displayProfileService.listProfiles", ["dms", "ipc", "outputs", "listProfiles"], (stdout, exitCode) => {
             root.refreshing = false;
             if (exitCode !== 0) {
@@ -31,6 +53,13 @@ Singleton {
     }
 
     function setProfile(profileName, onDone) {
+        if (root.autoEnabled) {
+            if (onDone)
+                onDone(false);
+
+            return ;
+        }
+
         if (!profileName || profileName.length === 0) {
             ToastService.showError("Display profile switch failed", "Profile name is empty.");
             if (onDone)
@@ -59,6 +88,9 @@ Singleton {
     }
 
     function nextProfileName() {
+        if (root.autoEnabled)
+            return "";
+
         if (!root.profiles || root.profiles.length === 0)
             return "";
 
@@ -124,6 +156,26 @@ Singleton {
         return {
             "profiles": parsedProfiles,
             "activeProfileName": activeProfileName
+        };
+    }
+
+    function _parseStatus(stdout) {
+        let autoEnabled = false;
+        const lines = stdout.split(/\r?\n/);
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            const separator = line.indexOf(":");
+            if (separator < 0)
+                continue;
+
+            const key = line.substring(0, separator).trim();
+            const value = line.substring(separator + 1).trim();
+            if (key === "auto")
+                autoEnabled = value.toLowerCase() === "on";
+
+        }
+        return {
+            "autoEnabled": autoEnabled
         };
     }
 
