@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.Common
 import qs.Modules.Plugins
 import qs.Widgets
@@ -101,6 +102,21 @@ PluginComponent {
         interval: 400
         repeat: false
         onTriggered: DisplayProfileService.refresh()
+    }
+
+    Process {
+        id: disableAutoProcess
+
+        command: ["dms", "ipc", "outputs", "toggleAuto"]
+        running: false
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0) {
+                DisplayProfileService.lastError = "dms ipc outputs toggleAuto exited " + exitCode;
+                return ;
+            }
+            DisplayProfileService.lastError = "";
+            DisplayProfileService.refresh();
+        }
     }
 
     horizontalBarPill: Component {
@@ -404,6 +420,14 @@ PluginComponent {
                     iconName: "refresh"
                     enabled: !DisplayProfileService.refreshing
                     onClicked: DisplayProfileService.refresh()
+                }
+
+                DankButton {
+                    text: disableAutoProcess.running ? "Disabling" : "Disable auto"
+                    iconName: "toggle_off"
+                    visible: root.autoEnabled
+                    enabled: !disableAutoProcess.running
+                    onClicked: disableAutoProcess.running = true
                 }
 
                 StyledText {
