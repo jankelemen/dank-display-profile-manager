@@ -75,7 +75,7 @@ PluginComponent {
         repeat: true
         triggeredOnStart: true
         onTriggered: {
-            if (DisplayProfileService.autoEnabled || DisplayProfileService.activeProfileName.length > 0 || startupRefresh.remainingAttempts <= 0) {
+            if (DisplayProfileService.autoEnabled || DisplayProfileService.profiles.length > 0 || DisplayProfileService.activeProfileName.length > 0 || startupRefresh.remainingAttempts <= 0) {
                 startupRefresh.stop();
                 return ;
             }
@@ -104,8 +104,16 @@ PluginComponent {
         onTriggered: DisplayProfileService.refresh()
     }
 
+    Timer {
+        id: manualRefresh
+
+        interval: 120
+        repeat: false
+        onTriggered: DisplayProfileService.refresh()
+    }
+
     Process {
-        id: disableAutoProcess
+        id: toggleAutoProcess
 
         command: ["dms", "ipc", "outputs", "toggleAuto"]
         running: false
@@ -419,15 +427,14 @@ PluginComponent {
                     text: DisplayProfileService.refreshing ? "Refreshing" : "Refresh"
                     iconName: "refresh"
                     enabled: !DisplayProfileService.refreshing
-                    onClicked: DisplayProfileService.refresh()
+                    onClicked: manualRefresh.restart()
                 }
 
                 DankButton {
-                    text: disableAutoProcess.running ? "Disabling" : "Disable auto"
+                    text: toggleAutoProcess.running ? "Toggling" : (root.autoEnabled ? "Disable auto" : "Enable auto")
                     iconName: "toggle_off"
-                    visible: root.autoEnabled
-                    enabled: !disableAutoProcess.running
-                    onClicked: disableAutoProcess.running = true
+                    enabled: !toggleAutoProcess.running
+                    onClicked: toggleAutoProcess.running = true
                 }
 
                 StyledText {
