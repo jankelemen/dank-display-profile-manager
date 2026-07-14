@@ -3,7 +3,7 @@
     "id": "displayProfileManager",
     "name": "Display Profile Manager",
     "description": "DankBar widget for selecting DMS output profiles and showing the currently active display profile.",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "license": "MIT",
     "author": "Jan Kelemen",
     "icon": "desktop_windows",
@@ -11,7 +11,7 @@
     "capabilities": ["dankbar-widget"],
     "component": "./DisplayProfileManager.qml",
     "settings": "./DisplayProfileManagerSettings.qml",
-    "requires_dms": ">=1.4.0",
+    "requires_dms": ">=1.5.0",
     "requires": ["dms"],
     "permissions": ["process", "settings_read", "settings_write"]
 }
