@@ -420,7 +420,7 @@ PluginComponent {
             Row {
                 width: parent.width - Theme.spacingL * 2
                 anchors.horizontalCenter: parent.horizontalCenter
-                height: 36
+                height: 40
                 spacing: Theme.spacingS
 
                 DankButton {
@@ -441,6 +441,7 @@ PluginComponent {
                     text: DisplayProfileService.lastRefreshText.length > 0 ? "Updated " + DisplayProfileService.lastRefreshText : ""
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.surfaceTextMedium
+                    height: parent.height
                     anchors.verticalCenter: parent.verticalCenter
                     visible: text.length > 0
                 }
