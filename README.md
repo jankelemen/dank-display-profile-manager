@@ -21,6 +21,7 @@ dms ipc outputs setProfile <profile>
 - Marks the active profile with a check indicator.
 - Switches profiles from the popout.
 - Cycles to the next profile from the pill right-click action.
+- Can abbreviate profile names to initials in the bar.
 - Polls profile state every 15 seconds by default.
 - Exposes the polling interval as a settings slider. Polling can also be disabled.
 
@@ -49,6 +50,7 @@ Settings live in **DMS Settings -> Plugins -> Display Profile Manager**.
 
 - **Refresh interval**: how often the plugin calls `dms ipc outputs listProfiles`; default is 15 seconds.
 - **Periodic polling**: enables or disables background refreshes. Manual refresh and profile switching still refresh state.
+- **Abbreviate profile names**: shows initials in the bar, such as `MH` for `my home` and `A` for automatic selection.
 
 Profiles themselves are managed by DMS outputs. This plugin only displays and selects them.
 

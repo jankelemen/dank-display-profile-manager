@@ -10,6 +10,7 @@ PluginComponent {
 
     readonly property int pollIntervalSeconds: Math.max(1, (pluginData && pluginData.pollIntervalSeconds) || 15)
     readonly property bool pollingEnabled: !pluginData || pluginData.pollingEnabled !== false
+    readonly property bool abbreviateProfileNames: pluginData ? pluginData.abbreviateProfileNames === true : false
     readonly property var profiles: DisplayProfileService.profiles || []
     readonly property bool autoEnabled: DisplayProfileService.autoEnabled
     readonly property string activeProfileName: DisplayProfileService.activeProfileName
@@ -49,6 +50,23 @@ PluginComponent {
             return "Auto";
 
         return root.activeProfileName.length > 0 ? root.activeProfileName : "No profile";
+    }
+
+    function barProfileText() {
+        if (!root.abbreviateProfileNames)
+            return root.displayName();
+
+        if (root.autoEnabled)
+            return "A";
+
+        if (root.activeProfileName.length === 0)
+            return root.displayName();
+
+        return root.activeProfileName.split(/[\s_-]+/).filter((word) => {
+            return word.length > 0;
+        }).map((word) => {
+            return word.charAt(0).toUpperCase();
+        }).join("");
     }
 
     function detailText() {
@@ -140,7 +158,7 @@ PluginComponent {
             }
 
             StyledText {
-                text: root.displayName()
+                text: root.barProfileText()
                 color: DisplayProfileService.lastError.length > 0 ? Theme.error : Theme.surfaceText
                 font.pixelSize: Theme.fontSizeSmall
                 elide: Text.ElideRight
@@ -164,7 +182,7 @@ PluginComponent {
             }
 
             StyledText {
-                text: root.displayName()
+                text: root.barProfileText()
                 color: DisplayProfileService.lastError.length > 0 ? Theme.error : Theme.surfaceText
                 font.pixelSize: Theme.fontSizeSmall
                 elide: Text.ElideRight

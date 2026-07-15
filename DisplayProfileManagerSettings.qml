@@ -21,6 +21,13 @@ PluginSettings {
         defaultValue: true
     }
 
+    ToggleSetting {
+        settingKey: "abbreviateProfileNames"
+        label: "Abbreviate profile names"
+        description: "Show only the initials of the active profile in the bar."
+        defaultValue: false
+    }
+
     StyledRect {
         width: parent.width
         height: generalCol.implicitHeight + Theme.spacingL * 2
