@@ -24,7 +24,7 @@ PluginSettings {
     ToggleSetting {
         settingKey: "abbreviateProfileNames"
         label: "Abbreviate profile names"
-        description: "Show only the initials of the active profile in the bar."
+        description: "Show abbreviated profile names and status labels in the bar."
         defaultValue: false
     }
 

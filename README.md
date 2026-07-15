@@ -50,7 +50,7 @@ Settings live in **DMS Settings -> Plugins -> Display Profile Manager**.
 
 - **Refresh interval**: how often the plugin calls `dms ipc outputs listProfiles`; default is 15 seconds.
 - **Periodic polling**: enables or disables background refreshes. Manual refresh and profile switching still refresh state.
-- **Abbreviate profile names**: shows initials in the bar, such as `MH` for `my home` and `A` for automatic selection.
+- **Abbreviate profile names**: shows shortened text in the bar, such as `MH` for `my home`, `A` for automatic selection, and `N` when no profile is active.
 
 Profiles themselves are managed by DMS outputs. This plugin only displays and selects them.
 

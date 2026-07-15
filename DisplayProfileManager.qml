@@ -60,7 +60,7 @@ PluginComponent {
             return "A";
 
         if (root.activeProfileName.length === 0)
-            return root.displayName();
+            return "N";
 
         return root.activeProfileName.split(/[\s_-]+/).filter((word) => {
             return word.length > 0;
